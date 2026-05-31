@@ -1,114 +1,189 @@
+@media (prefers-color-scheme: light)
+{
+	:root
+	{
+		--background-body: #FFE;
+		--background-nav: #EEE;
+		--background-nav-heading: #888;
+		--background-table: #FFF8CC;
+		--background-table-heading: #FFD5D9;
+		--color-body: #000;
+		--color-link: #AAA560;
+		--color-link-visited: #6060AA;
+		--color-translation: #888;
+		--color-list-number: #AAA;
+		--color-math-error: #F66;
+		--border-heading-separation-line: #888;
+		--border-table: #EE858C;
+		--border-figure: #888;
+	}
+}
+
+@media (prefers-color-scheme: dark)
+{
+	:root
+	{
+		--background-body: #110;
+		--background-nav: #222;
+		--background-nav-heading: #666;
+		--background-table: #2A2942;
+		--background-table-heading: #4F2529;
+		--color-body: #FFF;
+		--color-link: #CCC580;
+		--color-link-visited: #9090DD;
+		--color-translation: #888;
+		--color-list-number: #AAA;
+		--color-math-error: #F66;
+		--border-heading-separation-line: #AAA;
+		--border-table: #EE858C;
+		--border-figure: #888;
+	}
+}
+
 body
 {
-	background-color: #FFFFEE;
-	margin: 0px 15px 20px 15px;
+	background-color: var(--background-body);
+	color: var(--color-body);
+	margin: 20px 15px;
 }
+
+
+a
+{
+	text-decoration-line: none;
+}
+
+a:link:not(nav>ol a)
+{
+	color: var(--color-link);
+}
+
+a:visited:not(nav>ol a)
+{
+	color: var(--color-link-visited);
+}
+
+mark
+{
+	font-family: "Consolas", "JetBrains Mono", "Courier New", monospace;
+	font-size: 80%;
+	background-color: inherit;
+	color: var(--color-translation);
+	font-style: italic;
+	padding: 0 0.25em;
+}
+
 
 nav>p:not(#return)
 {
-	padding: 5px;
-	background-color: #888888;
-	color: #FFFFFF;
-	font-weight: bold;
+	background-color: var(--background-nav-heading);
+	color: var(--color-nav-heading);
 	text-align: center;
+	font-weight: bold;
+	padding: 5px;
 	margin: 0;
 }
 
-section#exercise
+nav>p#return
 {
-	background: linear-gradient(45deg,
-		#EEEEDD 0, #EEEEDD 25%,
-		#DDDDCC 25%, #DDDDCC 50%,
-		#EEEEDD 50%, #EEEEDD 75%,
-		#DDDDCC 75%, #DDDDCC 100%
-	);
-	background-size: 2em 2em;
-	margin: 1em 0 0 1em;
-	padding: 5px;
-	counter-reset: exercise;
+	text-align: center;
 }
 
-section#exercise>article
-{
-	display: grid;
-	grid-template-areas:
-		"number question"
-		"number answer";
-	grid-template-columns: min-content auto;
-}
-
-section#exercise>article::before
-{
-	counter-increment: exercise;
-	content: counter(exercise) ".";
-	font-family: "Cambria Math", "Cambria", "Times New Roman", serif;
-	font-weight: bold;
-	grid-area: number;
-	margin: 3px;
-}
-
-section#exercise div.question
-{
-	display: inline;
-	grid-area: question;
-}
-
-section#exercise div.answer
-{
-	margin: 0.5em 0;
-	grid-area: answer;
-}
-
-section#exercise div.answer:not(.available)
-{
-	display: none;
-}
-
-section#exercise div.answer p
-{
-	margin: 0.5em 0;
-}
-
-span.color
-{
-	height: 0.8em;
-	width: 0.8em;
-	border: 1px solid #000000;
-	display: inline-block;
-	vertical-align: middle;
-}
-
-ol.catalogue, ol.catalogue ol
+nav>ol, nav>ol ol
 {
 	list-style: none;
 	counter-reset: catalogue;
 }
 
-ol.catalogue
+nav>ol
 {
 	margin: 0;
 	padding: 5px 10px 10px 10px;
-	background-color: #EEEEEE;
+	background-color: var(--background-nav);
 }
 
-ol.catalogue ol
+nav>ol ol
 {
 	padding-left: 0px;
 }
 
-ol.catalogue>li::before, ol.catalogue ol>li::before
+nav>ol>li::before, nav>ol ol>li::before
 {
 	counter-increment: catalogue;
 	content: counters(catalogue, ".") ".";
 	font-family: "Cascadia Mono", "Consolas", "Courier New", monospace;
 	font-size: small;
-	color: #AAAAAA;
+	color: var(--color-list-number);
 }
 
-ol.catalogue a
+nav>ol a
 {
-	color: #000000;
+	color: var(--color-body);
 }
+
+
+main>:first-child
+{
+	margin-top: 0;
+}
+
+h3, h4, h5, h6
+{
+	margin-bottom: 0.5em;
+}
+
+h1
+{
+	margin: 0 0 20px 0;
+}
+
+h2
+{
+	font-size: 2em;
+	padding-bottom: 0.3em;
+	border-bottom: 2px solid var(--border-heading-separation-line);
+}
+
+h3
+{
+	font-size: 1.7em;
+	padding-bottom: 0.3em;
+	border-bottom: 1px solid var(--border-heading-separation-line);
+}
+
+h4
+{
+	font-size: 1.5em;
+}
+
+h5
+{
+	font-size: 1.3em;
+}
+
+h6
+{
+	font-size: 1em;
+}
+
+main hr
+{
+	margin: 2em 0;
+	border: 1px solid var(--border-heading-separation-line);
+}
+
+
+main h2, main h3, main h4, main h5, main h6, main table, main .definition, main .example
+{
+	display: flow-root;
+}
+
+main dfn
+{
+	font-style: normal;
+	font-weight: bold;
+}
+
 
 ol.tree, ol.tree ol
 {
@@ -133,200 +208,123 @@ ol.tree>li::before, ol.tree ol>li::before
 	content: counters(tree, ".") ".";
 	font-family: "Cascadia Mono", "Consolas", "Courier New", monospace;
 	font-size: small;
-	color: #AAAAAA;
+	color: var(--color-list-number);
 }
+
 
 table
 {
-	width: 100%;
 	border-collapse: collapse;
-}
-
-table col.title
-{
-	width: 25%;
 }
 
 table td, table th
 {
 	padding: 3px 8px 3px 8px;
-	border: 1.2px solid #EE858C;
+	border: 1.2px solid var(--border-table);
 }
 
 table th
 {
 	font-weight: normal;
-	background-color: #FFD5D9;
+	background-color: var(--background-table-heading);
 }
 
 table td
 {
-	background-color: #FFF8CC;
+	background-color: var(--background-table);
 }
 
-details
-{
-	display: inline-block;
-}
-
-pre
-{
-	border-left: 3px solid #EE858C;
-	padding: 5px;
-	background-color: rgba(128, 128, 128, 0.1);
-	font-family: "Cascadia Code", "Consolas", "Courier New", monospace;;
-	font-size: small;
-	tab-size: 4;
-	overflow-x: auto;
-	display: grid;
-	grid-template-columns: auto 1fr;
-}
-
-pre::-webkit-scrollbar
-{
-	display: none;
-}
-
-pre>span.line-number
-{
-	padding-right: 5px;
-	text-align: right;
-	color: #AAAAAA;
-	font-size: x-small;
-	user-select: none;
-}
-
-code
-{
-	font-family: "Cascadia Mono", "Consolas", "Courier New", monospace;
-}
 
 math:not([inline])
 {
 	display: block math;
 	math-style: normal;
+	margin: 2px 0;
 }
 
-math:not([inline])+math:not([inline])
+merror
 {
-	margin-top: 7px;
+	border: none;
+	background: unset;
+	color: var(--color-math-error);
 }
 
-p.definition, p.notice, p.warning, p.theorem
-{
-	padding: 8px;
-}
 
-p.definition
+main div.figures
 {
-	background-color: #EEEEEE;
-}
-
-p.notice
-{
-	background-color: #DDEEFF;
-}
-
-p.warning
-{
-	background: #FFF5B0;
-}
-
-p.theorem
-{
-	background-color: #FFEEDD;
-}
-
-p#return
-{
-	text-align: center;
-}
-
-mark
-{
-	font-family: "Consolas", "JetBrains Mono", "Courier New", monospace;
-	font-size: 80%;
-	background-color: inherit;
-	color: #888888;
-	font-style: italic;
-}
-
-dfn
-{
-	font-style: normal;
-	border-bottom: 2px dotted #AAAAAA;
-}
-
-a
-{
-	text-decoration: none;
-}
-
-a:link:not(ol.catalogue a)
-{
-	color: #AAA560;
-}
-
-a:visited:not(ol.catalogue a)
-{
-	color: #6060AA;
-}
-
-main>hr
-{
-	margin: 2em 5px 2em 5px;
-	border: 1px solid #AAAAAA;
-}
-
-data-source
-{
-	display: none;
+	float: right;
+	clear: right;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-end;;
 }
 
 main figure
 {
-	float: right;
 	display: grid;
 	padding: 5px;
 	margin: 5px;
-	border: 1px solid #888888;
+	border: 1px solid var(--border-figure);
 }
 
-main figure svg
+main figure>svg
 {
-	margin: 5px auto 5px auto;
+	margin: 5px auto;
 }
 
-main figure figcaption
+main figure>figcaption
 {
 	margin-top: 5px;
 	font-size: x-small;
 	text-align: center;
 }
 
-@media (min-width: 500px) and (max-width: 1000px)
+
+@media (max-width: 800px)
 {
-	nav>ol
+	h1
 	{
-		columns: 15em 3;
+		font-size: 3em;
+	}
+
+	h1>mark
+	{
+		display: block;
+		padding: 5px 0 0 0;
 	}
 }
 
-@media (min-width: 1000px)
+@media (min-width: 300px) and (max-width: 800px)
+{
+	nav
+	{
+		float: right;
+		margin: 0 0 20px 15px;
+	}
+}
+
+
+@media (min-width: 800px)
 {
 	body
 	{
 		display: grid;
-		grid-template-columns: 30% 70%;
+		grid-template-columns: 20% 80%;
 		grid-template-areas: 
-		"heading heading"
-		"nav main"
-		"nav exercise"
+			"heading heading"
+			"nav main";
 	}
 
-	h1 
+	h1
 	{
 		grid-area: heading;
+		font-size: 2em;
+	}
+	
+	main
+	{
+		grid-area: main;
+		margin: 0 0 0 15px;
 	}
 
 	nav
@@ -336,93 +334,5 @@ main figure figcaption
 		height: calc(100vh - 30px);
 		position: sticky;
 		top: 15px;
-	}
-
-	section#exercise
-	{
-		grid-area: "exercise";
-	}
-
-	main
-	{
-		grid-area: main;
-		margin: 0 0 0 15px;
-	}
-}
-
-@font-face
-{
-	font-family: "Consolas";
-	src: url("../fonts/consolas.ttf");
-}
-
-@media (prefers-color-scheme: dark)
-{
-	body
-	{
-		background-color: #111100;
-		color: #FFFFFF;
-	}
-
-	section#exercise
-	{
-		background: linear-gradient(45deg,
-			#112211 0, #112211 25%,
-			#223322 25%, #223322 50%,
-			#112211 50%, #112211 75%,
-			#223322 75%, #223322 100%
-		);
-		background-size: 2em 2em;
-	}
-	
-	span.color
-	{
-		border-color: #FFFFFF;
-	}
-
-	p.definition
-	{
-		background-color: #444444;
-	}
-	
-	p.notice
-	{
-		background-color: #112233;
-	}
-	
-	p.warning
-	{
-		background-color: #444500;
-	}
-
-	p.theorem
-	{
-		background-color: #443322;
-	}
-
-	nav>p:not(#return)
-	{
-		background-color: #666666;
-	}
-
-	ol.catalogue
-	{
-		background-color: #222222;
-	}
-
-	ol.catalogue a
-	{
-		color: #FFFFFF;
-	}
-
-	table th
-	{
-		font-weight: normal;
-		background-color: #4F2529;
-	}
-
-	table td
-	{
-		background-color: #2A2942;
 	}
 }
