@@ -1,9 +1,11 @@
 import { nodes } from "./nodes.js";
+import {get_index_position} from "./index.js";
 
 export namespace parse
 {
 	export namespace constant
 	{
+		export const flag_text = "这里";
 		export namespace math
 		{
 			export const parameter_count: ReadonlyMap<keyof MathMLElementTagNameMap, number> = new Map([
@@ -567,9 +569,64 @@ export namespace parse
 			]);
 		}
 	}
-	export function* parse_inline(source: string): Generator<string | HTMLElement, void>
+	export function* parse_inline(source: string): Generator<string | Node, void>
 	{
-		yield source;
+		const element_stack: HTMLElement[] = [];
+		for (const each_token of source.match(/[^$[\]]+|\$.+?\$|\[(?:(?:FLAG|DEF) )?[^$[\]]+|\]/g) ?? [])
+		{
+			const last_element = element_stack.at(-1);
+			if (each_token[0] === "$")
+			{
+				const math_token_result = parse_math(each_token.slice(1, -1));
+				math_token_result.setAttribute("inline", "");
+				if (last_element)
+					last_element.append(math_token_result);
+				else
+					yield math_token_result;
+			}
+			else if (each_token.startsWith("[FLAG"))
+			{
+				const element = document.createElement("a");
+				element_stack.push(element);
+				element.href = `#${each_token.slice(6)}`;
+				element.append(constant.flag_text);
+			}
+			else if (each_token.startsWith("[DEF"))
+			{
+				const element = document.createElement("dfn");
+				element_stack.push(element);
+				element.id = each_token.slice(5);
+				element.append(element.id);
+			}
+			else if (each_token[0] === "[")
+			{
+				const element = document.createElement("a");
+				element_stack.push(element);
+				const definition_href = get_index_position(each_token.slice(1))
+				if (definition_href !== undefined)
+					element.href = definition_href;
+				element.append(each_token.slice(1));
+			}
+			else if (each_token === "]")
+			{
+				if (element_stack.length > 1)
+				{
+					element_stack[-2].append(last_element!);
+				}
+				else if (last_element !== undefined)
+				{
+					yield last_element;
+				}
+				element_stack.pop();
+			}
+			else
+			{
+				if (last_element)
+					last_element.append(each_token);
+				else
+					yield each_token;
+			}
+		}
 	}
 	function parse_chunk(source: string): (string | Node)[]
 	{
