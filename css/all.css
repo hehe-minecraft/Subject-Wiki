@@ -7,6 +7,9 @@
 		--background-nav-heading: #888;
 		--background-table: #FFF8CC;
 		--background-table-heading: #FFD5D9;
+		--background-p-definition: #CCC;
+		--background-p-example: #DCA;
+		--background-p-note: #DEF;
 		--color-body: #000;
 		--color-link: #AAA560;
 		--color-link-visited: #6060AA;
@@ -28,6 +31,9 @@
 		--background-nav-heading: #666;
 		--background-table: #2A2942;
 		--background-table-heading: #4F2529;
+		--background-p-definition: #333;
+		--background-p-example: #320;
+		--background-p-note: #123;
 		--color-body: #FFF;
 		--color-link: #CCC580;
 		--color-link-visited: #9090DD;
@@ -173,9 +179,48 @@ main hr
 }
 
 
-main h2, main h3, main h4, main h5, main h6, main table, main .definition, main .example
+main
+{
+	counter-reset: definition example;
+}
+
+main h2, main h3, main h4, main h5, main h6, main table, main .definition, main .example, main .note
 {
 	display: flow-root;
+}
+
+main .definition, main .example, main .note
+{
+	padding: 0.5em;
+	background-color: var(--var-p-flag-background);
+}
+
+main .definition::before, main .example::before
+{
+	counter-increment: var(--var-p-flag-type);
+	content: var(--var-p-flag-name) " " counter(var(--var-p-flag-type));
+	font-weight: bold;
+	padding: 0 1em 0 0;
+	user-select: text;
+}
+
+main .definition
+{
+	--var-p-flag-background: var(--background-p-definition);
+	--var-p-flag-name: "定义";
+	--var-p-flag-type: definition;
+}
+
+main .example
+{
+	--var-p-flag-background: var(--background-p-example);
+	--var-p-flag-name: "例";
+	--var-p-flag-type: example;
+}
+
+main .note
+{
+	--var-p-flag-background: var(--background-p-note)
 }
 
 main dfn
@@ -240,6 +285,11 @@ math:not([inline])
 	display: block math;
 	math-style: normal;
 	margin: 2px 0;
+}
+
+math[inline]
+{
+	margin: 0 0.25em;
 }
 
 merror

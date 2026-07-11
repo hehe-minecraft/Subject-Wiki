@@ -611,8 +611,11 @@ export namespace parse
 			}
 			else
 			{
+				const flag = each_chunk.match(/^(NOTE|DEFINITION|EXAMPLE) /)?.[0] ?? "";
 				const paragraph = document.createElement("p");
-				paragraph.append(...parse_chunk(each_chunk));
+				paragraph.append(...parse_chunk(each_chunk.slice(flag.length)));
+				if (flag !== "")
+					paragraph.classList.add(flag.slice(0, -1).toLowerCase());
 				yield paragraph;
 			}
 		}
