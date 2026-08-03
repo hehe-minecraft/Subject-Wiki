@@ -10,6 +10,8 @@
 		--background-p-definition: #CCC;
 		--background-p-example: #DCA;
 		--background-p-note: #DEF;
+		--background-exercise: #DFD;
+		--border-exercise: #383;
 		--color-body: #000;
 		--color-link: #AAA560;
 		--color-link-visited: #6060AA;
@@ -34,6 +36,8 @@
 		--background-p-definition: #333;
 		--background-p-example: #320;
 		--background-p-note: #123;
+		--background-exercise: #242;
+		--border-exercise: #383;
 		--color-body: #FFF;
 		--color-link: #CCC580;
 		--color-link-visited: #9090DD;
@@ -93,6 +97,11 @@ nav>p:not(#return)
 nav>p#return
 {
 	text-align: center;
+}
+
+nav>p#return>::before
+{
+	content: "返回上一页：";
 }
 
 nav>ol, nav>ol ol
@@ -230,6 +239,45 @@ main dfn
 }
 
 
+section#exercise
+{
+	background-color: var(--background-exercise);
+	display: flex;
+}
+
+section#exercise p
+{
+	margin: 0;
+}
+
+section#exercise>article>.question
+{
+	padding: 0.5em;
+	border-left: 4px solid var(--border-exercise);
+	cursor: pointer;
+}
+
+section#exercise>article>.question>::before
+{
+	counter-increment: exercise;
+	content: counter(exercise) ".";
+	font-weight: bold;
+	padding-right: 0.25em;
+	user-select: text;
+}
+
+section#exercise>article>.answer:not(.shown)
+{
+	display: none;
+}
+
+section#exercise>article>.answer.shown
+{
+	padding: 0.5em;
+	border-left: 4px dashed var(--border-exercise);
+}
+
+
 ol.tree, ol.tree ol
 {
 	list-style: none;
@@ -285,6 +333,8 @@ math:not([inline])
 	display: block math;
 	math-style: normal;
 	margin: 2px 0;
+	overflow-x: auto;
+	overflow-y: hidden;
 }
 
 math[inline]
@@ -362,7 +412,9 @@ main figure>figcaption
 		grid-template-columns: 20% 80%;
 		grid-template-areas: 
 			"heading heading"
-			"nav main";
+			"nav main"
+			"nav exercise";
+		grid-template-rows: min-content 1fr min-content;
 	}
 
 	h1
@@ -374,6 +426,11 @@ main figure>figcaption
 	main
 	{
 		grid-area: main;
+		margin: 0 0 0 15px;
+	}
+
+	section#exercise
+	{
 		margin: 0 0 0 15px;
 	}
 

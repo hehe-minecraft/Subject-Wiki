@@ -572,7 +572,7 @@ export namespace parse
 	export function* parse_inline(source: string): Generator<string | Node, void>
 	{
 		const element_stack: HTMLElement[] = [];
-		for (const each_token of source.match(/[^$[\]]+|\$.+?\$|\[(?:(?:FLAG|DEF) )?[^$[\]]+|\]/g) ?? [])
+		for (const each_token of source.match(/[^$[\]]+|\$.+?\$|\[(?:(?:FLAG|DEF|AKA) )?[^$[\]]+|\]/g) ?? [])
 		{
 			const last_element = element_stack.at(-1);
 			if (each_token[0] === "$")
@@ -594,6 +594,13 @@ export namespace parse
 			else if (each_token.startsWith("[DEF"))
 			{
 				const element = document.createElement("dfn");
+				element_stack.push(element);
+				element.id = each_token.slice(5);
+				element.append(element.id);
+			}
+			else if (each_token.startsWith("[AKA"))
+			{
+				const element = document.createElement("mark");
 				element_stack.push(element);
 				element.id = each_token.slice(5);
 				element.append(element.id);
@@ -665,6 +672,10 @@ export namespace parse
 				heading.dataset.heading_level = heading_level.toString();
 				heading.append(...parse_chunk(each_chunk.slice(heading_level - 1)));
 				yield heading;
+			}
+			else if (each_chunk === "---")
+			{
+				yield document.createElement("hr");
 			}
 			else
 			{
