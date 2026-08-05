@@ -6,7 +6,7 @@ window.addEventListener("DOMContentLoaded", () => {
 	const nav_item_stack: HTMLElement[] = [];
 	for (const each_element of document.querySelectorAll("math[data-type=source]"))
 	{
-		each_element.replaceWith(parse.parse_math(each_element.textContent ?? ""));
+		each_element.replaceWith(new parse.Parser().parse_math(each_element.textContent ?? ""));
 	}
 	const source_elements = document.querySelectorAll("[data-type=source]") as NodeListOf<HTMLElement>;
 	for (const source_element of source_elements)
@@ -16,7 +16,7 @@ window.addEventListener("DOMContentLoaded", () => {
 		source_element.innerHTML = "";
 		const tab_count = source_with_tabs.match(/^\s*/)![0].length - 1;
 		const source = source_with_tabs.replaceAll(new RegExp(`\n[\r\t\f\v ]{0,${tab_count}}`, "g"), "\n").trimEnd().slice(1);
-		for (const each_parse_result of parse.parse_source(source))
+		for (const each_parse_result of new parse.Parser().parse_source(source))
 		{
 			source_element.appendChild(each_parse_result);
 			if (each_parse_result instanceof HTMLHeadingElement && navigation_bar !== undefined)
