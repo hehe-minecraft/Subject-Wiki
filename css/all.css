@@ -242,12 +242,17 @@ main dfn
 section#exercise
 {
 	background-color: var(--background-exercise);
-	display: flex;
+	counter-reset: exercise;
 }
 
-section#exercise p
+section#exercise p:first-child
 {
-	margin: 0;
+	margin-top: 0;
+}
+
+section#exercise p:last-child
+{
+	margin-bottom: 0;
 }
 
 section#exercise>article>.question
