@@ -673,27 +673,62 @@ export namespace parse
 		}
 		public *parse_source(source: string): Generator<Node, void>
 		{
-			for (const each_chunk of source.split(/\n\s*\n/g))
+			for (const each_block of source.split(/\n\s*\n/g))
 			{
-				if (each_chunk.startsWith("#"))
+				if (each_block.startsWith("#"))
 				{
 					this.heading_id ++;
-					const heading_level = Math.min(each_chunk.match(/#+/)![0].length + 1, 6);
+					const heading_level = Math.min(each_block.match(/#+/)![0].length + 1, 6);
 					const heading = document.createElement(`h${heading_level}`);
 					heading.id = `heading_${this.heading_id}`;
 					heading.dataset.heading_level = heading_level.toString();
-					heading.append(...this.parse_chunk(each_chunk.slice(heading_level - 1)));
+					heading.append(...this.parse_chunk(each_block.slice(heading_level - 1)));
 					yield heading;
 				}
-				else if (each_chunk === "---")
+				else if (each_block.startsWith("-"))
+				{
+					const list_stack: HTMLOListElement[] = [document.createElement("ol")];
+					const list_item_stack: HTMLLIElement[] = [];
+					for (const each_line_indented of each_block.split("\n"))
+					{
+						const each_line = each_line_indented.trimStart();
+						let list_indent = each_line_indented.length - each_line.length;
+						if (each_line.startsWith("-"))
+						{
+							while (list_indent < list_stack.length - 1)
+								list_stack.pop();
+							while (list_indent < list_item_stack.length - 1)
+								list_item_stack.pop();
+							if (list_indent > list_stack.length)
+								list_indent = list_stack.length;
+							if (list_indent === list_stack.length)
+							{
+								const new_list: HTMLOListElement = document.createElement("ol");
+								list_stack.push(new_list);
+								if (list_indent > 0)
+									list_item_stack.at(-1)?.appendChild(new_list);
+							}
+							const nav_item: HTMLLIElement = document.createElement("li");
+							list_stack.at(-1)!.appendChild(nav_item);
+							list_item_stack.push(nav_item);
+							nav_item.append(...this.parse_chunk(each_line.substring(1))); // Remove the mark "-".
+						}
+						else
+						{
+							list_item_stack.at(-1)?.append(...this.parse_chunk(each_line));
+						}
+					}
+					yield list_stack[0]
+				}
+				else if (each_block === "---")
 				{
 					yield document.createElement("hr");
 				}
-				else if (each_chunk.startsWith("FIGURE "))
+				else if (each_block.startsWith("FIGURE "))
 				{
 					const figures_node = document.createElement("div");
 					figures_node.classList.add("figures");
-					for (const each_line of each_chunk.split("\n"))
+					for (const each_line of each_block.split("\n"))
 					{
 						this.image_id ++;
 						const figure_node = document.createElement("figure");
@@ -710,9 +745,9 @@ export namespace parse
 				}
 				else
 				{
-					const flag = each_chunk.match(/^(NOTE|DEFINITION|EXAMPLE) /)?.[0] ?? "";
+					const flag = each_block.match(/^(NOTE|DEFINITION|EXAMPLE) /)?.[0] ?? "";
 					const paragraph = document.createElement("p");
-					paragraph.append(...this.parse_chunk(each_chunk.slice(flag.length)));
+					paragraph.append(...this.parse_chunk(each_block.slice(flag.length)));
 					if (flag !== "")
 						paragraph.classList.add(flag.slice(0, -1).toLowerCase());
 					yield paragraph;

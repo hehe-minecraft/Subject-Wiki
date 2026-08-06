@@ -1,5 +1,5 @@
 const definition_index: ReadonlyMap<string, Set<string>> = new Map([
-	["/physics/senior high/01-motion.html", new Set(["参考系", "reference frame", "相对静止", "相对运动", "矢量", "vector", "标量", "scalar", "位矢", "position vector"])]
+	["/physics/senior high/01-motion.html", new Set(["参考系", "reference frame", "相对静止", "相对运动", "矢量", "vector", "标量", "scalar", "位矢", "position vector", "三角形法则", "矢量的减法", "位移", "displacement", "矢量的加法", "矢量的合成", "时间", "time"])]
 ]);
 
 export function get_index_position(definition_name: string): string | undefined

@@ -1,9 +1,9 @@
 <svg width="150" height="150" xmlns="http://www.w3.org/2000/svg">
-	<g stroke="#8A8E" stroke-width="1.5">
+	<g stroke="#8A8" stroke-width="1.5">
 		<line x1="20" y1="0" x2="20" y2="150"/>
 		<line x1="0" y1="20" x2="150" y2="20"/>
 	</g>
-	<g stroke="#88AE" stroke-width="1.5">
+	<g stroke="#88A" stroke-width="1.5">
 		<line x1="40" y1="0" x2="40" y2="150"/>
 		<line x1="0" y1="80" x2="150" y2="80"/>
 	</g>

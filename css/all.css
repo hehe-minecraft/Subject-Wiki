@@ -83,6 +83,12 @@ mark
 	padding: 0 0.25em;
 }
 
+mark+mark::before
+{
+	content: "/";
+	padding: 0 0.5em 0 0;
+}
+
 
 nav>p:not(#return)
 {
@@ -104,31 +110,11 @@ nav>p#return>::before
 	content: "返回上一页：";
 }
 
-nav>ol, nav>ol ol
-{
-	list-style: none;
-	counter-reset: catalogue;
-}
-
 nav>ol
 {
 	margin: 0;
 	padding: 5px 10px 10px 10px;
 	background-color: var(--background-nav);
-}
-
-nav>ol ol
-{
-	padding-left: 0px;
-}
-
-nav>ol>li::before, nav>ol ol>li::before
-{
-	counter-increment: catalogue;
-	content: counters(catalogue, ".") ".";
-	font-family: "Cascadia Mono", "Consolas", "Courier New", monospace;
-	font-size: small;
-	color: var(--color-list-number);
 }
 
 nav>ol a
@@ -185,6 +171,32 @@ main hr
 {
 	margin: 2em 0;
 	border: 1px solid var(--border-heading-separation-line);
+}
+
+ol
+{
+	list-style: none;
+	counter-reset: catalogue;
+}
+
+main ol:not(ol ol), #exercise ol:not(ol ol)
+{
+	margin: 0;
+	padding: 0 0 0 5px;
+}
+
+ol ol
+{
+	padding-left: 0px;
+}
+
+ol>li::before
+{
+	counter-increment: catalogue;
+	content: counters(catalogue, ".") ".";
+	font-family: "Cascadia Mono", "Consolas", "Courier New", monospace;
+	font-size: small;
+	color: var(--color-list-number);
 }
 
 
@@ -468,6 +480,7 @@ main figure>figcaption
 
 	h1
 	{
+		margin-top: 0;
 		font-size: 2em;
 	}
 
