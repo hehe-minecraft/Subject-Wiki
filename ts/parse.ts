@@ -34,6 +34,7 @@ export namespace parse
 				["\\\\", "\\"],
 				["\\{", "{"],
 				["\\}", "}"],
+				["\\/", "/"],
 				["\\lfloor", "⌊"],
 				["\\rfloor", "⌋"],
 				["\\lceil", "⌈"],
@@ -171,6 +172,7 @@ export namespace parse
 				["\\Chi", "Χ"],
 				["\\Psi", "Ψ"],
 				["\\Omega", "Ω"],
+				["\\Ohm", "Ω"],
 				["\\digamma", "ϝ"],
 				["\\varepsilon", "ε"],
 				["\\vartheta", "ϑ"],
@@ -501,6 +503,10 @@ export namespace parse
 				["\\fraky", "𝔶"],
 				["\\frakz", "𝔷"],
 			]);
+			export const identifier_decoration_operator: ReadonlyMap<string, [keyof MathMLElementTagNameMap, string]> = new Map([
+				["\\bar", ["mover", "‾"]],
+				["\\vec", ["mover", "→"]],
+			])
 			export const variant_normal_identifiers: ReadonlyArray<string> = [
 				"\\normalA",
 				"\\normalB",
@@ -555,6 +561,7 @@ export namespace parse
 				"\\normaly",
 				"\\normalz",
 				"\\diff",
+				"\\Ohm",
 			];
 			export const binary_operator: ReadonlyMap<string, keyof MathMLElementTagNameMap> = new Map([
 				["^", "msup"],
@@ -569,316 +576,323 @@ export namespace parse
 			]);
 		}
 	}
-	export class Parser
+	let heading_id = 0;
+	let image_id = 0;
+	export function* parse_inline(source: string): Generator<string | Node, void>
 	{
-		heading_id = 0;
-		image_id = 0;
-		public *parse_inline(source: string): Generator<string | Node, void>
+		const element_stack: HTMLElement[] = [];
+		for (const each_token of source.match(/[^$[\]]+|\$.+?\$|\[(?:(?:FLAG|DEF|AKA|FIGURE) )?[^$[\]]+|\]/g) ?? [])
 		{
-			const element_stack: HTMLElement[] = [];
-			for (const each_token of source.match(/[^$[\]]+|\$.+?\$|\[(?:(?:FLAG|DEF|AKA|FIGURE) )?[^$[\]]+|\]/g) ?? [])
+			const last_element = element_stack.at(-1);
+			if (each_token[0] === "$")
 			{
-				const last_element = element_stack.at(-1);
-				if (each_token[0] === "$")
-				{
-					const math_token_result = this.parse_math(each_token.slice(1, -1));
-					math_token_result.setAttribute("inline", "");
-					if (last_element)
-						last_element.append(math_token_result);
-					else
-						yield math_token_result;
-				}
-				else if (each_token.startsWith("[FLAG"))
-				{
-					const element = document.createElement("a");
-					element_stack.push(element);
-					element.href = `#${each_token.slice(6)}`;
-					element.append(constant.flag_text);
-				}
-				else if (each_token.startsWith("[DEF"))
-				{
-					const element = document.createElement("dfn");
-					element_stack.push(element);
-					element.id = each_token.slice(5);
-					element.append(element.id);
-				}
-				else if (each_token.startsWith("[AKA"))
-				{
-					const element = document.createElement("mark");
-					element_stack.push(element);
-					element.id = each_token.slice(5);
-					element.append(element.id);
-				}
-				else if (each_token.startsWith("[FIGURE"))
-				{
-					const figure_back_offset = parseInt(each_token.substring(8));
-					const figure_id = Number.isNaN(figure_back_offset) ? this.image_id : this.image_id - figure_back_offset;
-					const element = document.createElement("a");
-					element_stack.push(element);
-					element.href = `#figure_${figure_id}`;
-					element.append(`图 ${figure_id}`);
-				}
-				else if (each_token[0] === "[")
-				{
-					const element = document.createElement("a");
-					element_stack.push(element);
-					const definition_href = get_index_position(each_token.slice(1))
-					if (definition_href !== undefined)
-						element.href = definition_href;
-					element.append(each_token.slice(1));
-				}
-				else if (each_token === "]")
-				{
-					if (element_stack.length > 1)
-					{
-						element_stack[-2].append(last_element!);
-					}
-					else if (last_element !== undefined)
-					{
-						yield last_element;
-					}
-					element_stack.pop();
-				}
+				const math_token_result = parse_math(each_token.slice(1, -1));
+				math_token_result.setAttribute("inline", "");
+				if (last_element)
+					last_element.append(math_token_result);
 				else
+					yield math_token_result;
+			}
+			else if (each_token.startsWith("[FLAG"))
+			{
+				const element = document.createElement("a");
+				element_stack.push(element);
+				element.href = `#${each_token.slice(6)}`;
+				element.append(constant.flag_text);
+			}
+			else if (each_token.startsWith("[DEF"))
+			{
+				const element = document.createElement("dfn");
+				element_stack.push(element);
+				element.id = each_token.slice(5);
+				element.append(element.id);
+			}
+			else if (each_token.startsWith("[AKA"))
+			{
+				const element = document.createElement("mark");
+				element_stack.push(element);
+				element.id = each_token.slice(5);
+				element.append(element.id);
+			}
+			else if (each_token.startsWith("[FIGURE"))
+			{
+				const figure_back_offset = parseInt(each_token.substring(8));
+				const figure_id = Number.isNaN(figure_back_offset) ? image_id : image_id - figure_back_offset;
+				const element = document.createElement("a");
+				element_stack.push(element);
+				element.href = `#figure_${figure_id}`;
+				element.append(`图 ${figure_id}`);
+			}
+			else if (each_token[0] === "[")
+			{
+				const element = document.createElement("a");
+				element_stack.push(element);
+				const definition_href = get_index_position(each_token.slice(1))
+				if (definition_href !== undefined)
+					element.href = definition_href;
+				element.append(each_token.slice(1));
+			}
+			else if (each_token === "]")
+			{
+				if (element_stack.length > 1)
 				{
-					if (last_element)
-						last_element.append(each_token);
-					else
-						yield each_token;
+					element_stack[-2].append(last_element!);
 				}
+				else if (last_element !== undefined)
+				{
+					yield last_element;
+				}
+				element_stack.pop();
+			}
+			else
+			{
+				if (last_element)
+					last_element.append(each_token);
+				else
+					yield each_token;
 			}
 		}
-		private parse_chunk(source: string): (string | Node)[]
+	}
+	function parse_chunk(source: string): (string | Node)[]
+	{
+		const lines = source.split("\n");
+		const result_nodes: (string | Node)[] = [];
+		for (const each_line of lines)
 		{
-			const lines = source.split("\n");
-			const result_nodes: (string | Node)[] = [];
-			for (const each_line of lines)
+			if (each_line.startsWith("MATH "))
 			{
-				if (each_line.startsWith("MATH "))
-				{
-					result_nodes.push(this.parse_math(each_line.substring(5)));
-				}
-				else
-				{
-					result_nodes.push(...this.parse_inline(each_line));
-					result_nodes.push(document.createElement("br"));
-				}
+				result_nodes.push(parse_math(each_line.substring(5)));
 			}
-			const last_node = result_nodes[result_nodes.length - 1];
-			if (last_node instanceof HTMLElement && last_node.tagName === "br")
+			else
 			{
-				result_nodes.pop();
+				result_nodes.push(...parse_inline(each_line));
+				result_nodes.push(document.createElement("br"));
 			}
-			return result_nodes;
 		}
-		public *parse_source(source: string): Generator<Node, void>
+		const last_node = result_nodes[result_nodes.length - 1];
+		if (last_node instanceof HTMLElement && last_node.tagName === "br")
 		{
-			for (const each_block of source.split(/\n\s*\n/g))
+			result_nodes.pop();
+		}
+		return result_nodes;
+	}
+	export function* parse_source(source: string): Generator<Node, void>
+	{
+		for (const each_block of source.split(/\n\s*\n/g))
+		{
+			if (each_block.startsWith("#"))
 			{
-				if (each_block.startsWith("#"))
+				heading_id ++;
+				const heading_level = Math.min(each_block.match(/#+/)![0].length + 1, 6);
+				const heading = document.createElement(`h${heading_level}`);
+				heading.id = `heading_${heading_id}`;
+				heading.dataset.heading_level = heading_level.toString();
+				heading.append(...parse_chunk(each_block.slice(heading_level - 1)));
+				yield heading;
+			}
+			else if (each_block.startsWith("-"))
+			{
+				const list_stack: HTMLOListElement[] = [document.createElement("ol")];
+				const list_item_stack: HTMLLIElement[] = [];
+				for (const each_line_indented of each_block.split("\n"))
 				{
-					this.heading_id ++;
-					const heading_level = Math.min(each_block.match(/#+/)![0].length + 1, 6);
-					const heading = document.createElement(`h${heading_level}`);
-					heading.id = `heading_${this.heading_id}`;
-					heading.dataset.heading_level = heading_level.toString();
-					heading.append(...this.parse_chunk(each_block.slice(heading_level - 1)));
-					yield heading;
-				}
-				else if (each_block.startsWith("-"))
-				{
-					const list_stack: HTMLOListElement[] = [document.createElement("ol")];
-					const list_item_stack: HTMLLIElement[] = [];
-					for (const each_line_indented of each_block.split("\n"))
+					const each_line = each_line_indented.trimStart();
+					let list_indent = each_line_indented.length - each_line.length;
+					if (each_line.startsWith("-"))
 					{
-						const each_line = each_line_indented.trimStart();
-						let list_indent = each_line_indented.length - each_line.length;
-						if (each_line.startsWith("-"))
+						while (list_indent < list_stack.length - 1)
+							list_stack.pop();
+						while (list_indent < list_item_stack.length - 1)
+							list_item_stack.pop();
+						if (list_indent > list_stack.length)
+							list_indent = list_stack.length;
+						if (list_indent === list_stack.length)
 						{
-							while (list_indent < list_stack.length - 1)
-								list_stack.pop();
-							while (list_indent < list_item_stack.length - 1)
-								list_item_stack.pop();
-							if (list_indent > list_stack.length)
-								list_indent = list_stack.length;
-							if (list_indent === list_stack.length)
-							{
-								const new_list: HTMLOListElement = document.createElement("ol");
-								list_stack.push(new_list);
-								if (list_indent > 0)
-									list_item_stack.at(-1)?.appendChild(new_list);
-							}
-							const nav_item: HTMLLIElement = document.createElement("li");
-							list_stack.at(-1)!.appendChild(nav_item);
-							list_item_stack.push(nav_item);
-							nav_item.append(...this.parse_chunk(each_line.substring(1))); // Remove the mark "-".
+							const new_list: HTMLOListElement = document.createElement("ol");
+							list_stack.push(new_list);
+							if (list_indent > 0)
+								list_item_stack.at(-1)?.appendChild(new_list);
 						}
-						else
-						{
-							list_item_stack.at(-1)?.append(...this.parse_chunk(each_line));
-						}
+						const nav_item: HTMLLIElement = document.createElement("li");
+						list_stack.at(-1)!.appendChild(nav_item);
+						list_item_stack.push(nav_item);
+						nav_item.append(...parse_chunk(each_line.substring(1))); // Remove the mark "-".
 					}
-					yield list_stack[0]
-				}
-				else if (each_block === "---")
-				{
-					yield document.createElement("hr");
-				}
-				else if (each_block.startsWith("FIGURE "))
-				{
-					const figures_node = document.createElement("div");
-					figures_node.classList.add("figures");
-					for (const each_line of each_block.split("\n"))
-					{
-						this.image_id ++;
-						const figure_node = document.createElement("figure");
-						const image_node = document.createElement("img");
-						const image_index_node = document.createElement("figcaption");
-						image_node.src = each_line.substring(7);
-						image_index_node.innerText = `图 ${this.image_id}`;
-						figure_node.id = `figure_${this.image_id}`;
-						figure_node.append(image_node);
-						figure_node.append(image_index_node);
-						figures_node.append(figure_node)
-					}
-					yield figures_node;
-				}
-				else
-				{
-					const flag = each_block.match(/^(NOTE|DEFINITION|EXAMPLE) /)?.[0] ?? "";
-					const paragraph = document.createElement("p");
-					paragraph.append(...this.parse_chunk(each_block.slice(flag.length)));
-					if (flag !== "")
-						paragraph.classList.add(flag.slice(0, -1).toLowerCase());
-					yield paragraph;
-				}
-			}
-		}
-		public parse_math(source: string): MathMLElement
-		{
-			interface element_group
-			{
-				elements: MathMLElement[];
-				parent: MathMLElement;
-			}
-			const element: MathMLElement = nodes.math_element("math");
-			const element_stack: element_group[] = [{ elements: [], parent: element }]; // The first entry should never be popped.
-			for (const each_match of source.matchAll(/\\(?:matrix\{|[a-zA-Z0-9]+|[\\^_|{}])|\^{2}|_{2}|>{2,3}|<{2,3}|[<>]=|->|[^0-9\\]|\d+(?:\.\d+)?/g))
-			{
-				let each_symbol = each_match[0];
-				const current_parent: MathMLElement = element_stack[element_stack.length - 1].parent;
-				const current_elements: MathMLElement[] = element_stack[element_stack.length - 1].elements;
-				if (each_symbol === " ") {}
-				else if (each_symbol === "\\matrix{")
-				{
-					const new_element: MathMLElement = nodes.math_element("mtable");
-					current_elements.push(new_element);
-					element_stack.push({ elements: [], parent: new_element });
-				}
-				else if (each_symbol === "{")
-				{
-					let new_element: MathMLElement;
-					if (current_parent.tagName === "mtr")
-						new_element = nodes.math_element("mtd");
-					else if (current_parent.tagName === "mtable")
-						new_element = nodes.math_element("mtr");
 					else
-						new_element = nodes.math_element("mrow");
-					current_elements.push(new_element);
-					element_stack.push({ elements: [], parent: new_element });
-				}
-				else if (each_symbol === "}")
-				{
-					if (!["mrow", "mtable", "mtr", "mtd"].includes(current_parent.tagName))
-						continue;
-					nodes.attach(current_parent, current_elements);
-					element_stack.pop();
-				}
-				else if (constant.math.unary_operator.has(each_symbol))
-				{
-					const new_element: MathMLElement = nodes.math_element(constant.math.unary_operator.get(each_symbol)!);
-					current_elements.push(new_element);
-					element_stack.push({ elements: [], parent: new_element });
-				}
-				else if (each_symbol === "\\choose")
-				{
-					const base_element: MathMLElement = current_elements.pop() ?? nodes.math_element("mrow");
-					const left_bracket: MathMLElement = nodes.math_element("mo");
-					left_bracket.textContent = "(";
-					current_elements.push(left_bracket);
-					const new_element: MathMLElement = nodes.math_element("mfrac");
-					new_element.setAttribute("linethickness", "0");
-					current_elements.push(new_element);
-					element_stack.push({ elements: [base_element], parent: new_element });
-					const right_bracket: MathMLElement = nodes.math_element("mo");
-					right_bracket.textContent = ")";
-					current_elements.push(right_bracket);
-				}
-				else if (constant.math.binary_operator.has(each_symbol))
-				{
-					const base_element: MathMLElement = current_elements.pop() ?? nodes.math_element("mrow");
-					const new_element: MathMLElement = nodes.math_element(constant.math.binary_operator.get(each_symbol)!);
-					current_elements.push(new_element);
-					element_stack.push({ elements: [base_element], parent: new_element });
-				}
-				else if (constant.math.operator_replace.has(each_symbol))
-				{
-					const new_element: MathMLElement = nodes.math_element("mo");
-					new_element.textContent = constant.math.operator_replace.get(each_symbol)!;
-					current_elements.push(new_element);
-				}
-				else if (constant.math.identifier_replace.has(each_symbol))
-				{
-					const new_element: MathMLElement = nodes.math_element("mi");
-					if (constant.math.variant_normal_identifiers.includes(each_symbol))
-						new_element.setAttribute("mathvariant", "normal");
-					new_element.textContent = constant.math.identifier_replace.get(each_symbol)!;
-					current_elements.push(new_element);
-				}
-				else if (/^(?:[()\[\]⌈⌉⌊⌋⟨⟩|‖<>=,.+−×⋅])$/.test(each_symbol)) // operator
-				{
-					const new_element: MathMLElement = nodes.math_element("mo");
-					new_element.textContent = each_symbol;
-					current_elements.push(new_element);
-				}
-				else if (/^\d+(?:\.\d+)?$/.test(each_symbol)) // number
-				{
-					const new_element: MathMLElement = nodes.math_element("mn");
-					new_element.textContent = each_symbol;
-					current_elements.push(new_element);
-				}
-				else if (each_symbol.startsWith("\\"))
-				{
-					const new_element: MathMLElement = nodes.math_element("merror");
-					const inner_text_element: MathMLElement = nodes.math_element("mtext");
-					inner_text_element.textContent = each_symbol;
-					new_element.appendChild(inner_text_element);
-					current_elements.push(new_element);
-				}
-				else // indentifier
-				{
-					const new_element: MathMLElement = nodes.math_element("mi");
-					new_element.textContent = each_symbol;
-					current_elements.push(new_element);
-				}
-				let current_level: element_group = element_stack[element_stack.length - 1];
-				while ((constant.math.parameter_count.get(current_level.parent.nodeName as keyof MathMLElementTagNameMap) ?? +Infinity) <= current_level.elements.length)
-				{
-					element_stack.pop();
-					if (current_level.parent.nodeName !== "mroot")
 					{
-						nodes.attach(current_level.parent, current_level.elements);
+						list_item_stack.at(-1)?.append(...parse_chunk(each_line));
 					}
-					else // mrow needs to reverse to support 3\root 2
-					{
-						nodes.attach(current_level.parent, current_level.elements.reverse());
-					}
-					current_level = element_stack[element_stack.length - 1];
 				}
+				yield list_stack[0]
 			}
-			for (const each_element of element_stack[0].elements)
-				element.appendChild(each_element);
-			return element;
+			else if (each_block === "---")
+			{
+				yield document.createElement("hr");
+			}
+			else if (each_block.startsWith("FIGURE "))
+			{
+				const figures_node = document.createElement("div");
+				figures_node.classList.add("figures");
+				for (const each_line of each_block.split("\n"))
+				{
+					image_id ++;
+					const figure_node = document.createElement("figure");
+					const image_node = document.createElement("img");
+					const image_index_node = document.createElement("figcaption");
+					image_node.src = each_line.substring(7);
+					image_index_node.innerText = `图 ${image_id}`;
+					figure_node.id = `figure_${image_id}`;
+					figure_node.append(image_node);
+					figure_node.append(image_index_node);
+					figures_node.append(figure_node)
+				}
+				yield figures_node;
+			}
+			else
+			{
+				const flag = each_block.match(/^(NOTE|DEFINITION|EXAMPLE) /)?.[0] ?? "";
+				const paragraph = document.createElement("p");
+				paragraph.append(...parse_chunk(each_block.slice(flag.length)));
+				if (flag !== "")
+					paragraph.classList.add(flag.slice(0, -1).toLowerCase());
+				yield paragraph;
+			}
 		}
+	}
+	export function parse_math(source: string): MathMLElement
+	{
+		interface element_group
+		{
+			elements: MathMLElement[];
+			parent: MathMLElement;
+		}
+		const element: MathMLElement = nodes.math_element("math");
+		const element_stack: element_group[] = [{ elements: [], parent: element }]; // The first entry should never be popped.
+		for (const each_match of source.matchAll(/\\(?:matrix\{|[a-zA-Z0-9]+|[\\^_|{}/])|\^{2}|_{2}|>{2,3}|<{2,3}|[<>]=|->|[^0-9\\]|\d+(?:\.\d+)?/g))
+		{
+			let each_symbol = each_match[0];
+			const current_parent: MathMLElement = element_stack[element_stack.length - 1].parent;
+			const current_elements: MathMLElement[] = element_stack[element_stack.length - 1].elements;
+			if (each_symbol === " ") {}
+			else if (each_symbol === "\\matrix{")
+			{
+				const new_element: MathMLElement = nodes.math_element("mtable");
+				current_elements.push(new_element);
+				element_stack.push({ elements: [], parent: new_element });
+			}
+			else if (each_symbol === "{")
+			{
+				let new_element: MathMLElement;
+				if (current_parent.tagName === "mtr")
+					new_element = nodes.math_element("mtd");
+				else if (current_parent.tagName === "mtable")
+					new_element = nodes.math_element("mtr");
+				else
+					new_element = nodes.math_element("mrow");
+				current_elements.push(new_element);
+				element_stack.push({ elements: [], parent: new_element });
+			}
+			else if (each_symbol === "}")
+			{
+				if (!["mrow", "mtable", "mtr", "mtd"].includes(current_parent.tagName))
+					continue;
+				nodes.attach(current_parent, current_elements);
+				element_stack.pop();
+			}
+			else if (constant.math.unary_operator.has(each_symbol))
+			{
+				const new_element: MathMLElement = nodes.math_element(constant.math.unary_operator.get(each_symbol)!);
+				current_elements.push(new_element);
+				element_stack.push({ elements: [], parent: new_element });
+			}
+			else if (constant.math.identifier_decoration_operator.has(each_symbol))
+			{
+				const base_element: MathMLElement = current_elements.pop() ?? nodes.math_element("mrow");
+				const new_element: MathMLElement = nodes.math_element(constant.math.identifier_decoration_operator.get(each_symbol)![0]);
+				const decoration_element: MathMLElement = nodes.math_element("mo");
+				decoration_element.textContent = constant.math.identifier_decoration_operator.get(each_symbol)![1];
+				new_element.append(base_element);
+				new_element.append(decoration_element);
+				current_elements.push(new_element);
+			}
+			else if (each_symbol === "\\choose")
+			{
+				const base_element: MathMLElement = current_elements.pop() ?? nodes.math_element("mrow");
+				const left_bracket: MathMLElement = nodes.math_element("mo");
+				left_bracket.textContent = "(";
+				current_elements.push(left_bracket);
+				const new_element: MathMLElement = nodes.math_element("mfrac");
+				new_element.setAttribute("linethickness", "0");
+				current_elements.push(new_element);
+				element_stack.push({ elements: [base_element], parent: new_element });
+				const right_bracket: MathMLElement = nodes.math_element("mo");
+				right_bracket.textContent = ")";
+				current_elements.push(right_bracket);
+			}
+			else if (constant.math.binary_operator.has(each_symbol))
+			{
+				const base_element: MathMLElement = current_elements.pop() ?? nodes.math_element("mrow");
+				const new_element: MathMLElement = nodes.math_element(constant.math.binary_operator.get(each_symbol)!);
+				current_elements.push(new_element);
+				element_stack.push({ elements: [base_element], parent: new_element });
+			}
+			else if (constant.math.operator_replace.has(each_symbol))
+			{
+				const new_element: MathMLElement = nodes.math_element("mo");
+				new_element.textContent = constant.math.operator_replace.get(each_symbol)!;
+				current_elements.push(new_element);
+			}
+			else if (constant.math.identifier_replace.has(each_symbol))
+			{
+				const new_element: MathMLElement = nodes.math_element("mi");
+				if (constant.math.variant_normal_identifiers.includes(each_symbol))
+					new_element.setAttribute("mathvariant", "normal");
+				new_element.textContent = constant.math.identifier_replace.get(each_symbol)!;
+				current_elements.push(new_element);
+			}
+			else if (/^(?:[()\[\]⌈⌉⌊⌋⟨⟩|‖<>=,.+−×⋅])$/.test(each_symbol)) // operator
+			{
+				const new_element: MathMLElement = nodes.math_element("mo");
+				new_element.textContent = each_symbol;
+				current_elements.push(new_element);
+			}
+			else if (/^\d+(?:\.\d+)?$/.test(each_symbol)) // number
+			{
+				const new_element: MathMLElement = nodes.math_element("mn");
+				new_element.textContent = each_symbol;
+				current_elements.push(new_element);
+			}
+			else if (each_symbol.startsWith("\\"))
+			{
+				const new_element: MathMLElement = nodes.math_element("merror");
+				const inner_text_element: MathMLElement = nodes.math_element("mtext");
+				inner_text_element.textContent = each_symbol;
+				new_element.appendChild(inner_text_element);
+				current_elements.push(new_element);
+			}
+			else // indentifier
+			{
+				const new_element: MathMLElement = nodes.math_element("mi");
+				new_element.textContent = each_symbol;
+				current_elements.push(new_element);
+			}
+			let current_level: element_group = element_stack[element_stack.length - 1];
+			while ((constant.math.parameter_count.get(current_level.parent.nodeName as keyof MathMLElementTagNameMap) ?? +Infinity) <= current_level.elements.length)
+			{
+				element_stack.pop();
+				if (current_level.parent.nodeName !== "mroot")
+				{
+					nodes.attach(current_level.parent, current_level.elements);
+				}
+				else // mrow needs to reverse to support 3\root 2
+				{
+					nodes.attach(current_level.parent, current_level.elements.reverse());
+				}
+				current_level = element_stack[element_stack.length - 1];
+			}
+		}
+		for (const each_element of element_stack[0].elements)
+			element.appendChild(each_element);
+		return element;
 	}
 }

@@ -62,7 +62,7 @@
 		<circle cx="120" cy="100" r="3"/>
 	</g>
 	<g stroke="#8A8" stroke-width="1.5">
-		<line x1="20" y1="150" x2="20" y2="3" marker-end="url(#arrow_green)"/>
+		<line x1="20" y1="3" x2="20" y2="150" marker-start="url(#arrow_green)"/>
 		<line x1="0" y1="130" x2="147" y2="130" marker-end="url(#arrow_green)"/>
 		<line x1="20" y1="130" x2="30" y2="40" marker-end="url(#arrow_green)"/>
 		<line x1="20" y1="130" x2="120" y2="100" marker-end="url(#arrow_green)"/>

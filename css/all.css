@@ -13,7 +13,7 @@
 		--background-exercise: #DFD;
 		--border-exercise: #383;
 		--color-body: #000;
-		--color-link: #AAA560;
+		--color-link: #999450;
 		--color-link-visited: #6060AA;
 		--color-translation: #888;
 		--color-list-number: #AAA;
@@ -367,7 +367,7 @@ merror
 }
 
 
-main div.figures
+div.figures
 {
 	float: right;
 	clear: right;
@@ -376,7 +376,7 @@ main div.figures
 	justify-content: flex-end;;
 }
 
-main figure
+figure
 {
 	display: grid;
 	padding: 5px;
@@ -384,12 +384,12 @@ main figure
 	border: 1px solid var(--border-figure);
 }
 
-main figure>svg
+figure>svg
 {
 	margin: 5px auto;
 }
 
-main figure>figcaption
+figure>figcaption
 {
 	margin-top: 5px;
 	font-size: x-small;

@@ -1,11 +1,19 @@
 <svg width="150" height="150" xmlns="http://www.w3.org/2000/svg">
+	<defs>
+		<marker id="arrow_green" viewBox="-7 -7 14 14" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+			<path d="M -5 -3 l 5 3 l -5 3" stroke="#8A8" fill="none" stroke-width="1.5"/>
+		</marker>
+		<marker id="arrow_blue" viewBox="-7 -7 14 14" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+			<path d="M -5 -3 l 5 3 l -5 3" stroke="#88A" fill="none" stroke-width="1.5"/>
+		</marker>
+	</defs>
 	<g stroke="#8A8" stroke-width="1.5">
-		<line x1="20" y1="0" x2="20" y2="150"/>
-		<line x1="0" y1="20" x2="150" y2="20"/>
+		<line x1="20" y1="3" x2="20" y2="150" marker-start="url(#arrow_green)"/>
+		<line x1="0" y1="20" x2="147" y2="20" marker-end="url(#arrow_green)"/>
 	</g>
 	<g stroke="#88A" stroke-width="1.5">
-		<line x1="40" y1="0" x2="40" y2="150"/>
-		<line x1="0" y1="80" x2="150" y2="80"/>
+		<line x1="40" y1="3" x2="40" y2="150" marker-start="url(#arrow_blue)"/>
+		<line x1="0" y1="80" x2="147" y2="80" marker-end="url(#arrow_blue)"/>
 	</g>
 	<g stroke="#A88A">
 		<g stroke-width="1">
