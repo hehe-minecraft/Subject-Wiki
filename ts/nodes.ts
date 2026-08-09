@@ -24,13 +24,6 @@ export namespace nodes
 			return this.length;
 		}
 	}
-	export function attach(target: Node, elements: Iterable<Node>): void
-	{
-		for (const each_element of elements)
-		{
-			target.appendChild(each_element);
-		}
-	}
 	export function math_element<key extends keyof MathMLElementTagNameMap>(name: key): MathMLElementTagNameMap[key]
 	{
 		return document.createElementNS("http://www.w3.org/1998/Math/MathML", name);

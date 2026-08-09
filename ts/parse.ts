@@ -796,7 +796,7 @@ export namespace parse
 			{
 				if (!["mrow", "mtable", "mtr", "mtd"].includes(current_parent.tagName))
 					continue;
-				nodes.attach(current_parent, current_elements);
+				current_parent.append(...current_elements);
 				element_stack.pop();
 			}
 			else if (constant.math.unary_operator.has(each_symbol))
@@ -882,11 +882,11 @@ export namespace parse
 				element_stack.pop();
 				if (current_level.parent.nodeName !== "mroot")
 				{
-					nodes.attach(current_level.parent, current_level.elements);
+					current_level.parent.append(...current_level.elements);
 				}
 				else // mrow needs to reverse to support 3\root 2
 				{
-					nodes.attach(current_level.parent, current_level.elements.reverse());
+					current_level.parent.append(...current_level.elements.reverse());
 				}
 				current_level = element_stack[element_stack.length - 1];
 			}
