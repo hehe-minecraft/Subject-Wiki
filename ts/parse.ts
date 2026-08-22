@@ -581,7 +581,7 @@ export namespace parse
 	export function* parse_inline(source: string): Generator<string | Node, void>
 	{
 		const element_stack: HTMLElement[] = [];
-		for (const each_token of source.match(/[^$[\]]+|\$.+?\$|\[(?:(?:FLAG|DEF|AKA|FIGURE) )?[^$[\]]+|\]/g) ?? [])
+		for (const each_token of source.match(/[^$[\]]+|\$.+?\$|\[(?:(?:FLAG|DEF|AKA|FIGURE|NOTE) )?[^$[\]]+|\]/g) ?? [])
 		{
 			const last_element = element_stack.at(-1);
 			if (each_token[0] === "$")
@@ -609,7 +609,7 @@ export namespace parse
 			}
 			else if (each_token.startsWith("[AKA"))
 			{
-				const element = document.createElement("mark");
+				const element = document.createElement("i");
 				element_stack.push(element);
 				element.id = each_token.slice(5);
 				element.append(element.id);
@@ -621,7 +621,14 @@ export namespace parse
 				const element = document.createElement("a");
 				element_stack.push(element);
 				element.href = `#figure_${figure_id}`;
-				element.append(`图 ${figure_id}`);
+				element.append(`图 ${figure_id} `);
+			}
+			else if (each_token.startsWith("[NOTE"))
+			{
+				const element = document.createElement("mark");
+				element_stack.push(element);
+				element.classList.add("note");
+				element.title = each_token.slice(6);
 			}
 			else if (each_token[0] === "[")
 			{

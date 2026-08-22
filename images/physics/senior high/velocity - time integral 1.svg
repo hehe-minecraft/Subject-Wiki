@@ -1,0 +1,30 @@
+<svg width="150" height="150" xmlns="http://www.w3.org/2000/svg">
+	<defs>
+		<marker id="arrow_green" viewBox="-7 -7 14 14" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+			<path d="M -5 -3 l 5 3 l -5 3" stroke="#8A8" fill="none" stroke-width="1.5"/>
+		</marker>
+		<marker id="arrow_blue" viewBox="-7 -7 14 14" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+			<path d="M -5 -3 l 5 3 l -5 3" stroke="#88A" fill="none" stroke-width="1.5"/>
+		</marker>
+	</defs>
+	<path fill="#88A8" d="M 10 140 q 20 -5 45 -80 t 50 10 t 35 45 L 140 140 z"/>
+	<g stroke="#8A8" fill="none" stroke-width="1.5">
+		<line x1="10" y1="3" x2="10" y2="140" marker-start="url(#arrow_green)"/>
+		<line x1="10" y1="140" x2="147" y2="140" marker-end="url(#arrow_green)"/>
+		<path d="M 10 140 q 20 -5 45 -80 t 50 10 t 35 45"/>
+	</g>
+	<foreignObject x="18" y="-5" width="20" height="20">
+		<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>𝐯</mi></math>
+		<style>
+			@media (prefers-color-scheme: light){ math { color: black; } }
+			@media (prefers-color-scheme: dark){ math { color: white; } }
+		</style>
+	</foreignObject>
+	<foreignObject x="140" y="110" width="20" height="20">
+		<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>t</mi></math>
+		<style>
+			@media (prefers-color-scheme: light){ math { color: black; } }
+			@media (prefers-color-scheme: dark){ math { color: white; } }
+		</style>
+	</foreignObject>
+</svg>

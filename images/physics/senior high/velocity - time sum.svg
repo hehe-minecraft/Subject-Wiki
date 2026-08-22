@@ -1,0 +1,68 @@
+<svg width="150" height="150" xmlns="http://www.w3.org/2000/svg">
+	<defs>
+		<marker id="arrow_green" viewBox="-7 -7 14 14" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+			<path d="M -5 -3 l 5 3 l -5 3" stroke="#8A8" fill="none" stroke-width="1.5"/>
+		</marker>
+		<marker id="arrow_blue" viewBox="-7 -7 14 14" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+			<path d="M -5 -3 l 5 3 l -5 3" stroke="#88A" fill="none" stroke-width="1.5"/>
+		</marker>
+		<marker id="arrow_blue_small" viewBox="-7 -7 14 14" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+			<path d="M -3 -1 l 3 1 l -3 1" stroke="#88A" fill="none" stroke-width="1.5"/>
+		</marker>
+	</defs>
+	<g fill="#88A8">
+		<rect x="20" y="134" width="10" height="6"/>
+		<rect x="30" y="120" width="10" height="20"/>
+		<rect x="40" y="100" width="10" height="40" fill="#A88A"/>
+		<rect x="50" y="76" width="10" height="64"/>
+		<rect x="60" y="47" width="10" height="93"/>
+		<rect x="70" y="30" width="10" height="110"/>
+		<rect x="80" y="26" width="10" height="114"/>
+		<rect x="90" y="34" width="10" height="106"/>
+		<rect x="100" y="55" width="10" height="85"/>
+		<rect x="110" y="87" width="10" height="53"/>
+		<rect x="120" y="112" width="10" height="28"/>
+		<rect x="130" y="128" width="10" height="12"/>
+	</g>
+	<g stroke="#88A" stroke-width="1">
+		<line x1="30" y1="40" x2="38" y2="40" marker-end="url(#arrow_blue_small)"/>
+		<line x1="60" y1="40" x2="52" y2="40" marker-end="url(#arrow_blue_small)"/>
+		<line x1="55" y1="102" x2="55" y2="138" marker-start="url(#arrow_blue_small)" marker-end="url(#arrow_blue_small)"/>
+		<line x1="40" y1="35" x2="40" y2="140"/>
+		<line x1="50" y1="35" x2="50" y2="140"/>
+		<line x1="40" y1="100" x2="60" y2="100"/>
+	</g>
+	<g stroke="#8A8" fill="none" stroke-width="1.5">
+		<line x1="10" y1="3" x2="10" y2="140" marker-start="url(#arrow_green)"/>
+		<line x1="10" y1="140" x2="147" y2="140" marker-end="url(#arrow_green)"/>
+		<path d="M 10 140 q 20 -5 45 -80 t 50 10 t 35 45"/>
+	</g>
+	<foreignObject x="18" y="-5" width="20" height="20">
+		<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>𝐯</mi></math>
+		<style>
+			@media (prefers-color-scheme: light){ math { color: black; } }
+			@media (prefers-color-scheme: dark){ math { color: white; } }
+		</style>
+	</foreignObject>
+	<foreignObject x="140" y="110" width="20" height="20">
+		<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>t</mi></math>
+		<style>
+			@media (prefers-color-scheme: light){ math { color: black; } }
+			@media (prefers-color-scheme: dark){ math { color: white; } }
+		</style>
+	</foreignObject>
+	<foreignObject x="37" y="10" width="20" height="20">
+		<math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="normal">d</mi><mi>t</mi></math>
+		<style>
+			@media (prefers-color-scheme: light){ math { color: black; } }
+			@media (prefers-color-scheme: dark){ math { color: white; } }
+		</style>
+	</foreignObject>
+	<foreignObject x="60" y="105" width="20" height="20">
+		<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>𝐯</mi></math>
+		<style>
+			@media (prefers-color-scheme: light){ math { color: black; } }
+			@media (prefers-color-scheme: dark){ math { color: white; } }
+		</style>
+	</foreignObject>
+</svg>
