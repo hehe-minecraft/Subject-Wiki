@@ -63,7 +63,7 @@
 			[DEF 位矢][AKA position vector]，也叫[DEF 位置矢量]，是从[坐标系]原点指向一个点的[矢量]，代表该点的位置。位矢的基本单位为$\normalm$，读作米，常用$\boldr$表示。
 
 			DEFINITION 米
-			$1$[DEF 米][AKA meter][AKA metre][AKA m]是光在$1/{299,792,458}\normals$内传播的距离。
+			$1$[DEF 米][AKA meter][AKA metre][AKA m]是光在真空中$1/{299,792,458}\normals$内传播的距离。
 
 			“米”的定义在这里先给出，但是这是相对论的结论，还有一大段路要走。我们不妨先沿用初中对米的直观感受。
 
@@ -87,7 +87,7 @@
 
 			需要注意，这些前缀有的是大写，有的是小写，不能够混淆。例如$1\normalM\Ohm$是$10^6\Ohm$，而$1\normalm\Ohm$是$10^{-3}\Ohm$。
 
-			FIGURE /images/physics/senior high/relative position.svg
+			FIGURE ../../images/physics/senior high/relative position.svg
 
 			不同坐标系中，同一个物体[位矢]是可以不同的。如[FIGURE]，$A,B,C$三点在最短长度为$1\normalm$的方格中。
 			假如以$A$为原点，正右方为$x$轴正方向，正上方为$y$轴正方向建立[平面直角坐标系]，那么$B$的[位矢]$\boldr_{AB}=(2\normalm,{-6\normalm})$，$C$的[位矢]$\boldr_{AC}=(11\normalm,{-11\normalm})$。
@@ -97,7 +97,7 @@
 
 			[位移]就是[位矢]的变化。我们知道，一个[标量]的变化可以用它的末值减去它的初值来表示，因此，我们希望把它推广到[矢量]上。
 
-			FIGURE /images/physics/senior high/displacement.svg
+			FIGURE ../../images/physics/senior high/displacement.svg
 
 			要计算两个矢量的差，我们将这两个[矢量]放到同一个直角坐标系中。如[FIGURE]，$A,B$两点在最短长度为$1\normalm$的方格中。假设一个动点$P$从$A$移动到$B$。
 			建立如[FIGURE]所示的直角坐标系，正右方为$x$轴，正上方为$y$轴，那么通过数格子的方法，动点向右移动了$9\normalm$，向下移动了$6\normalm$，那么物体的位移就可以表示为$\boldx=(9\normalm,{-6\normalm})$。通过图形不难发现，$9\normalm$就是$B$的横坐标与$A$的横坐标之差，$-6\normalm$就是$B$的纵坐标与$A$的纵坐标之差，很容易证明无论$A,B$的位置在哪里，这个结论都是普适的。
@@ -179,7 +179,7 @@
 			MATH \boldv={\diff\boldr}/{\diff t}。
 			[DEF 平均速度][AKA average velocity]是一段时间内的[位移]除以这段时间，常用$\boldv\bar$表示，即
 			MATH \boldv\bar=\boldx/t。
-			[瞬时速度]的大小就是[DEF 瞬时速率][AKA speed]，常用$v$表示。
+			[瞬时速度]的大小就是[DEF 瞬时速率]，简称[DEF 速率][AKA speed]，常用$v$表示。
 
 			位矢变化的快慢就是速度，类似地，我们也可以用[变化率]描述任何物理量变化的快慢。
 
@@ -189,8 +189,8 @@
 			EXAMPLE 求[速度]可能的单位。
 			我们知道，[速度]是[位矢]对时间的导数，
 			MATH \boldv={\diff\boldr}/{\diff t}，
-			由于$\boldr$的单位是$\normalm$，那么上面$\diff\boldr$的单位也是$\normalm$；类似地，下面$\diff t$的单位就是$\normals$。两者做比，[速度]的单位就是$\normalm\/\normals$。
-			当然，我们也可以取$\boldr$单位为$\normalk\normalm$，$t$的单位为$\normalh$。这样我们就可以得到[速度]的单位也可以是$\normalk\normalm\/\normalh$。
+			由于$\boldr$的单位是$\normalm$，那么上面$\diff\boldr$的单位也是$\normalm$；类似地，下面$\diff t$的单位就是$\normals$。两者做比，[速度]的单位就是$\normalm\/\normals$。由于除以一个数就是乘上它的倒数，我们也可以将它写为$\normalm\cdot\normals^{-1}$。
+			当然，我们也可以取$\boldr$单位为$\normalk\normalm$，$t$的单位为$\normalh$。这样我们就可以得到[速度]的单位也可以是$\normalk\normalm\/\normalh$，即$\normalk\normalm\cdot\normalh^{-1}$。
 
 			由于
 			MATH 1\normalk\normalm=1000\normalm，1\normalh=3600\normals，
@@ -205,9 +205,9 @@
 			我们知道，位移是[过程量]，时间也是[过程量]，但是，这并不能说明[速度]也是[过程量]。为什么呢？我们回到[速度]的定义。[速度]是描述一段无限缩短的时间内一点状态的物理量，而一段无限缩短的时间会导致开始[时刻]和结束[时刻]无限接近。我们认为这样两个无限接近的[时刻]可以看作一个[时刻]，在这样一段无限缩短的时间中任何物理量的[变化量]也是[状态量]。因此，[速度]是两个描述相同[时刻]的[状态量]相除的结果，就也是[状态量]。
 			[平均速度]就不一样了。我们知道，[平均速度]描述的时间并没有无限缩短，因此它是两个[过程量]相除的结果，就也是[过程量]。
 
-			FIGURE /images/physics/senior high/velocity - time sum.svg
-			FIGURE /images/physics/senior high/velocity - time integral 1.svg
-			FIGURE /images/physics/senior high/velocity - time integral 2.svg
+			FIGURE ../../images/physics/senior high/velocity - time sum.svg
+			FIGURE ../../images/physics/senior high/velocity - time integral 1.svg
+			FIGURE ../../images/physics/senior high/velocity - time integral 2.svg
 
 			我们刚刚提到，[速度]是一个[状态量]，其对应一个[过程量][平均速度]。类似地，我们也可以定义其他物理量的平均值。但是由于物理量是连续变化的，它在过程中有无数个状态，我们就不能用初中直接相加再求平均的方法算了。考虑一个一维坐标系中沿坐标轴正方向运动的物体，它的[速度]随时刻[NOTE 你可能在其他资料上看到“随时间变化”的字眼，但是这里时间又表示“时刻”的意思，为了避免混淆，我们采用严谨但不常用的说法]不断变化。[速度]的坐标表示随着时刻变化的图象为[FIGURE 2]。我们称这种纵轴为一种物理量$A$，横轴为另一种物理量$B$的图象为$A-B$图。在[FIGURE 2]所示的$\boldv-t$图中，我们取比较小的时间间隔$\diff t$，那么在这段时间中，物体的[速度]接近恒定值$\boldv$，那么它们的乘积就是这段时间内物体的[位移]$\boldx$，假如用这段时间内物体[速度]的初始值表示$\boldv$，那么它在[FIGURE 2]中恰好为红色小矩形的面积，因此我们可以用这样一个红色小矩形的面积表示这段时间内物体的[位移]。同理，其他蓝紫色小矩形的面积表示其他时间段中物体的[位移]。将它们全部相加，得到的整块面积，就可以粗略表示物体在全程的[位移]了。当我们将时间间隔$\diff t$取得越来越小，我们所得到的面积就越来越接近[FIGURE 1]中显示的曲线与$t$轴所围成的面积。因此，我们可以得到，对一个一维坐标系中沿坐标轴正方向运动的物体，[位移]$\boldx$就是$\boldv-t$图中曲线与$t$轴所围成的面积。“与$t$轴围成的面积”是指，从曲线的两端分别向$t$轴作垂线，竖直方向上看在两垂线之间、水平方向上看在函数图像与$t$轴之间的区域的面积，也就是[FIGURE 0]中的面积。
 			我们称这种取微元并与当前微元下特定物理量的取值做乘积的做法为“积分”，所得到的乘积也叫“积分”。这个定义目前并不充分，我们将在以后继续补充。由我们刚刚的例子可以猜到，积分与求导是相反的过程。导数可以表示一个物理量的变化率，而积分可以表示一个物理量的累积量。我们可以将其表示为
@@ -242,7 +242,7 @@
 				<div class="answer" data-type="source">
 					为了叙述方便，我们令以$A$为原点的坐标系中$B$的位矢为$\boldr_{AB}$，其余同理。
 
-					FIGURE /images/physics/senior high/relative position connection.svg
+					FIGURE ../../images/physics/senior high/relative position connection.svg
 					
 					结论有
 
